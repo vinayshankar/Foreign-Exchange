@@ -1,0 +1,15 @@
+There are 9 features and 1 label
+
+Features -
+1. Average of Ask Price (in a chosen time interval)
+2. Maximum of Ask Price
+3. Minimum Ask Price
+4. Average of Bid Price
+4. Maximum of Bid Price
+6. Average Bid Price
+7. Average of Spread
+8. Maximum of Spread
+9. Minimum of Spread
+
+Labels - 
+1. Directionality of the Ask price. (0 for "will decrease" or 1 for "will increase")

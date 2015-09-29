@@ -8,44 +8,89 @@ import java.util.Date;
 import java.util.HashMap;
 
 public class DecisionTree {
-	
+
 	public static final String COMMA = ",";
 	public static final String NEW_LINE = "\n";
 	public static final String FORWARD_SLASH = "/";
 
 	public class ForexTree {
 
-		private ForexTree leftNode;
-		private ForexTree rightNode;
+		private ForexTree leftNode = null;
+		private ForexTree rightNode = null;
 
-		private int nodeId; // feature ID
+		private int nodeId = -1; // feature ID
 
-		private int leftNodeSize;
-		private int rightNodeSize;
+		private int leftNodeSize = 0;
+		private int rightNodeSize = 0;
+
+		private double askIncreasePorbability = -1;
 
 		public ForexTree(ArrayList<Record> records) {
-			getBestFeature(records);
-		}
-
-		private int getBestFeature(ArrayList<Record> records) {
-			// iterate over the records, check each feature value (yes or no)
-			// and for yes and no, check number of label yes and no
-			// now calculate entropy
-
-			// repeat for all features
-
-			// choose the feature with the most information gain
-			return 0;
-		}
-
-		private HashMap<Integer, EntropyData> getDataForEntropy(ArrayList<Record> records) {
+			this.nodeId = initAndGetBestFeatureId(records);
+			ArrayList<Record> rightNodeRecords = new ArrayList<Record>(this.rightNodeSize);
+			ArrayList<Record> leftNodeRecords = new ArrayList<Record>(this.leftNodeSize);
 			
+			for(Record r : records){
+				if(r.getFeature(this.nodeId)){
+					rightNodeRecords.add(r);
+				}else{
+					leftNodeRecords.add(r);
+				}
+			}
+			
+			this.rightNode = new ForexTree(rightNodeRecords);
+			this.leftNode = new ForexTree(leftNodeRecords);
+		}
+
+		private int initAndGetBestFeatureId(ArrayList<Record> records) {
+			double minRemainingEntropy = 1;
+			int minRemainingEntropyFeatureId = -1;
+
+			for (int i = 1; i <= Record.NO_OF_FEATURES && i != this.nodeId; i++) {
+				HashMap<Integer, EntropyData> data = getDataForEntropy(records, i);
+				// now calculate entropy
+				double remaingingEntropy = getRemainingEntropy(data.get(1), data.get(0));
+				if (remaingingEntropy < minRemainingEntropy) {
+					minRemainingEntropy = remaingingEntropy;
+					minRemainingEntropyFeatureId = i;
+					this.askIncreasePorbability = ((double) (data.get(1).getYes() + data.get(0).getYes()))
+							/ records.size();
+					this.leftNodeSize = data.get(1).getYes() + data.get(1).getNo();
+					this.rightNodeSize = data.get(0).getYes() + data.get(0).getNo();
+				}
+			}
+
+			return minRemainingEntropyFeatureId;
+		}
+
+		private HashMap<Integer, EntropyData> getDataForEntropy(ArrayList<Record> records, int featureId) {
+			EntropyData yesData = new EntropyData();
+			EntropyData noData = new EntropyData();
+			for(Record r : records){
+				if(r.getFeature(featureId)){
+					if(Boolean.parseBoolean(r.getLabel())){
+						yesData.setYes(yesData.getYes()+1);
+					}else{
+						yesData.setNo(yesData.getNo()+1);
+					}
+				}else{
+					if(Boolean.parseBoolean(r.getLabel())){
+						noData.setYes(yesData.getYes()+1);
+					}else{
+						noData.setNo(yesData.getNo()+1);
+					}
+				}
+			}
+			HashMap<Integer, EntropyData> data = new HashMap<Integer, EntropyData>();
+			data.put(1, yesData);
+			data.put(0, noData);
+			return data;
 		}
 
 		private double getRemainingEntropy(EntropyData yesEntropyData, EntropyData noEntropyData) {
-			return ((yesEntropyData.getNo() + yesEntropyData.getYes()) / (leftNodeSize + rightNodeSize))
+			return ((yesEntropyData.getNo() + yesEntropyData.getYes()) / (this.leftNodeSize + this.rightNodeSize))
 					* yesEntropyData.getEntropy()
-					+ ((noEntropyData.getNo() + noEntropyData.getYes()) / leftNodeSize + rightNodeSize)
+					+ ((noEntropyData.getNo() + noEntropyData.getYes()) / this.leftNodeSize + this.rightNodeSize)
 							* noEntropyData.getEntropy();
 		}
 
@@ -54,26 +99,44 @@ public class DecisionTree {
 			private int no;
 
 			public int getYes() {
-				return yes;
+				return this.yes;
 			}
 
 			public int getNo() {
-				return no;
+				return this.no;
 			}
 
-			public EntropyData(int yes, int no) {
+			public void setYes(int yes){
 				this.yes = yes;
+			}
+			
+			public void setNo(int no){
 				this.no = no;
 			}
 
 			private double getEntropy() {
-				return -1 * (yes / (yes + no)) * Math.log((double) (yes / (yes + no)))
-						- 1 * (no / (yes + no)) * Math.log((double) (no / (yes + no)));
+				return -1 * (this.yes / (this.yes + this.no)) * Math.log((double) (this.yes / (this.yes + this.no)))
+						- 1 * (this.no / (this.yes + this.no)) * Math.log((double) (this.no / (this.yes + this.no)));
 			}
 		}
+
+		public double queryLabelValue(Record record) {
+			if (leftNode == null && rightNode == null) {
+				return this.askIncreasePorbability;
+			} else if (leftNode != null && rightNode != null) {
+				if (record.getFeature(nodeId)) {
+					return leftNode.queryLabelValue(record);
+				} else {
+					return rightNode.queryLabelValue(record);
+				}
+			} else {
+				return -1;
+			}
+		}
+		
 	}
-	
-	class Record {
+
+	private class Record {
 		String symbol;
 		Date tickTime;
 		float askPrice;
@@ -91,6 +154,17 @@ public class DecisionTree {
 		float minSpread;
 		// float eurJpyAvg; // Has not been implemented
 
+		public static final int NO_OF_FEATURES = 9;
+
+		private static final float AVG_ASK_PRICE_THRESHOLD = 0;
+		private static final float MAX_ASK_PRICE_THRESHOLD = 0;
+		private static final float MIN_ASK_PRICE_THRESHOLD = 0;
+		private static final float AVG_BID_PRICE_THRESHOLD = 0;
+		private static final float MAX_BID_PRICE_THRESHOLD = 0;
+		private static final float MIN_BID_PRICE_THRESHOLD = 0;
+		private static final float AVG_SPREAD_THRESHOLD = 0;
+		private static final float MAX_SPREAD_THRESHOLD = 0;
+		private static final float MIN_SPREAD_THRESHOLD = 0;
 		// label
 		String askDirectionality;
 
@@ -116,116 +190,33 @@ public class DecisionTree {
 		public Record() {
 		}
 
-		public String getSymbol() {
-			return symbol;
+		public boolean getFeature(int id) {
+			switch (id) {
+			case 1:
+				return this.avgAskPrice > AVG_ASK_PRICE_THRESHOLD;
+			case 2:
+				return this.maxAskPrice > MAX_ASK_PRICE_THRESHOLD;
+			case 3:
+				return this.minAskPrice > MIN_ASK_PRICE_THRESHOLD;
+			case 4:
+				return this.avgBidPrice > AVG_BID_PRICE_THRESHOLD;
+			case 5:
+				return this.maxBidPrice > MAX_BID_PRICE_THRESHOLD;
+			case 6:
+				return this.minBidPrice > MIN_BID_PRICE_THRESHOLD;
+			case 7:
+				return this.avgSpread > AVG_SPREAD_THRESHOLD;
+			case 8:
+				return this.maxSpread > MAX_SPREAD_THRESHOLD;
+			case 9:
+				return this.minSpread > MIN_SPREAD_THRESHOLD;
+			default:
+				return false;
+			}
 		}
 
-		public void setSymbol(String symbol) {
-			this.symbol = symbol;
-		}
-
-		public Date getTickTime() {
-			return tickTime;
-		}
-
-		public void setTickTime(Date tickTime) {
-			this.tickTime = tickTime;
-		}
-
-		public float getAskPrice() {
-			return askPrice;
-		}
-
-		public void setAskPrice(float askPrice) {
-			this.askPrice = askPrice;
-		}
-
-		public float getBidPrice() {
-			return bidPrice;
-		}
-
-		public void setBidPrice(float bidPrice) {
-			this.bidPrice = bidPrice;
-		}
-
-		public float getAvgSpread() {
-			return avgSpread;
-		}
-
-		public void setAvgSpread(float avgSpread) {
-			this.avgSpread = avgSpread;
-		}
-
-		public float getMaxSpread() {
-			return maxSpread;
-		}
-
-		public void setMaxSpread(float maxSpread) {
-			this.maxSpread = maxSpread;
-		}
-
-		public float getMinSpread() {
-			return minSpread;
-		}
-
-		public void setMinSpread(float minSpread) {
-			this.minSpread = minSpread;
-		}
-
-		public String getAskDirectionality() {
-			return askDirectionality;
-		}
-
-		public void setAskDirectionality(String askDirectionality) {
-			this.askDirectionality = askDirectionality;
-		}
-
-		public float getAvgAskPrice() {
-			return avgAskPrice;
-		}
-
-		public void setAvgAskPrice(float avgAskPrice) {
-			this.avgAskPrice = avgAskPrice;
-		}
-
-		public float getMaxAskPrice() {
-			return maxAskPrice;
-		}
-
-		public void setMaxAskPrice(float maxAskPrice) {
-			this.maxAskPrice = maxAskPrice;
-		}
-
-		public float getMinAskPrice() {
-			return minAskPrice;
-		}
-
-		public void setMinAskPrice(float minAskPrice) {
-			this.minAskPrice = minAskPrice;
-		}
-
-		public float getAvgBidPrice() {
-			return avgBidPrice;
-		}
-
-		public void setAvgBidPrice(float avgBidPrice) {
-			this.avgBidPrice = avgBidPrice;
-		}
-
-		public float getMaxBidPrice() {
-			return maxBidPrice;
-		}
-
-		public void setMaxBidPrice(float maxBidPrice) {
-			this.maxBidPrice = maxBidPrice;
-		}
-
-		public float getMinBidPrice() {
-			return minBidPrice;
-		}
-
-		public void setMinBidPrice(float minBidPrice) {
-			this.minBidPrice = minBidPrice;
+		public String getLabel() {
+			return this.askDirectionality;
 		}
 
 		public String toString() {

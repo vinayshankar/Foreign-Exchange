@@ -129,8 +129,8 @@ public class DecisionTree {
 			}
 
 			private double getEntropy() {
-				return -1 * (this.yes / (this.yes + this.no)) * Math.log((double) (this.yes / (this.yes + this.no)))
-						- 1 * (this.no / (this.yes + this.no)) * Math.log((double) (this.no / (this.yes + this.no)));
+				return -1 * (this.yes / (this.yes + this.no)) * (Math.log((double) (this.yes / (this.yes + this.no)))/Math.log(2))
+						- 1 * (this.no / (this.yes + this.no)) * (Math.log((double) (this.no / (this.yes + this.no)))/Math.log(2));
 			}
 		}
 

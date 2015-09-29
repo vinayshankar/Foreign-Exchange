@@ -209,8 +209,12 @@ public class PrepData {
 		}
 		return firstMinuteRecords;
 	}
-
+	
 	void getAllFiles(String inputPath) {
+		getAllFiles(inputPath,"");
+	}
+
+	void getAllFiles(String inputPath, String pattern) {
 		File directory = new File(inputPath);
 		File[] fList = directory.listFiles();
 		assert fList != null;

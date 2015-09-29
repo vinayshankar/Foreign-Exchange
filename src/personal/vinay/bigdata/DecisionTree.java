@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class DecisionTree {
 
@@ -20,7 +21,7 @@ public class DecisionTree {
 	
 	private static ArrayList<File> fileNames = new ArrayList<File>();
 
-	public class ForexTree {
+	public static class ForexTree {
 
 		private ForexTree leftNode = null;
 		private ForexTree rightNode = null;
@@ -31,29 +32,35 @@ public class DecisionTree {
 		private int rightNodeSize = 0;
 
 		private double askIncreasePorbability = -1;
+		
+		public static HashSet<Integer> FEATURES_USED = new HashSet<Integer>();
 
 		public ForexTree(ArrayList<Record> records) {
 			this.nodeId = initAndGetBestFeatureId(records);
-			ArrayList<Record> rightNodeRecords = new ArrayList<Record>(this.rightNodeSize);
-			ArrayList<Record> leftNodeRecords = new ArrayList<Record>(this.leftNodeSize);
+			FEATURES_USED.add(this.nodeId);
 			
-			for(Record r : records){
-				if(r.getFeature(this.nodeId)){
-					rightNodeRecords.add(r);
-				}else{
-					leftNodeRecords.add(r);
+			if(this.askIncreasePorbability != 1 && this.askIncreasePorbability != 0){
+				ArrayList<Record> leftNodeRecords = new ArrayList<Record>(this.leftNodeSize);
+				ArrayList<Record> rightNodeRecords = new ArrayList<Record>(this.rightNodeSize);
+				
+				for(Record r : records){
+					if(r.getFeature(this.nodeId)){
+						leftNodeRecords.add(r);
+					}else{
+						rightNodeRecords.add(r);
+					}
 				}
-			}
 			
-			this.rightNode = new ForexTree(rightNodeRecords);
-			this.leftNode = new ForexTree(leftNodeRecords);
+				this.leftNode = new ForexTree(leftNodeRecords);
+				this.rightNode = new ForexTree(rightNodeRecords);
+			}
 		}
 
 		private int initAndGetBestFeatureId(ArrayList<Record> records) {
 			double minRemainingEntropy = 1;
 			int minRemainingEntropyFeatureId = -1;
 
-			for (int i = 1; i <= Record.NO_OF_FEATURES && i != this.nodeId; i++) {
+			for (int i = 1; i <= Record.NO_OF_FEATURES && !FEATURES_USED.contains(i); i++) {
 				HashMap<Integer, EntropyData> data = getDataForEntropy(records, i);
 				// now calculate entropy
 				double remaingingEntropy = getRemainingEntropy(data.get(1), data.get(0));
@@ -302,7 +309,7 @@ public class DecisionTree {
 		}
 		
 		// Creating and training the decision tree
-		ForexTree learnedTree = decisionTree.new ForexTree(records);
+		ForexTree learnedTree = new DecisionTree.ForexTree(records);
 		
 		// Testing the decision tree
 		baseFolder = "/Users/vinayshankar/CMU/2015Fall/11-676-BigData/Project/TestData";

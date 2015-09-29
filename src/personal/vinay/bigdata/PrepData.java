@@ -21,7 +21,7 @@ public class PrepData {
 
 	public static void main(String[] args) {
 		PrepData prepData = new PrepData();
-		String baseFolder = "/Users/vinayshankar/CMU/2015Fall/11-676-BigData/Project/TestData";
+		String baseFolder = "/Users/vinayshankar/CMU/2015Fall/11-676-BigData/Project/Data";
 		prepData.getAllFiles(baseFolder);
 		for (File file : fileNames) {
 			prepData.processData(file);

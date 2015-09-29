@@ -61,23 +61,12 @@ public class PrepData {
 						records = prepData.setAvgSpread(records);
 						recordsGroupedByMinute.add(records);
 						if (recordsGroupedByMinute.size() == 2) {
-							// calculate the label
 							prepData.writeToFile(prepData.setDirectionality(recordsGroupedByMinute),
-									fileName.getAbsolutePath().toString().replace(".csv", "-prepared.csv")); // write
-																												// the
-																												// processed
-																												// records
-																												// for
-																												// 1
-																												// minute
-																												// to
-																												// the
-																												// file
+									fileName.getAbsolutePath().toString().replace(".csv", "-prepared.csv"));
 							recordsGroupedByMinute.remove(0);
 						}
-						records.clear(); // clear the array list
-						records.add(tempRecord); // add the first record of the
-													// new minute and continue
+						records.clear();
+						records.add(tempRecord);
 					}
 				}
 			}

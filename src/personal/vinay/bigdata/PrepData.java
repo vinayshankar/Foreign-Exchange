@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 
 public class PrepData {
 
@@ -21,7 +22,7 @@ public class PrepData {
 
 	public static void main(String[] args) {
 		PrepData prepData = new PrepData();
-		String baseFolder = "/Users/vinayshankar/CMU/2015Fall/11-676-BigData/Project/Data";
+		String baseFolder = "C:/Users/Vinay Shankar/Documents/Vinay/CMU/2015Fall/11-676-BigData/Project/DevData";
 		prepData.getAllFiles(baseFolder);
 		for (File file : fileNames) {
 			prepData.processData(file);
@@ -31,7 +32,7 @@ public class PrepData {
 	@SuppressWarnings("deprecation")
 	void processData(File fileName) {
 		ArrayList<Record> records = new ArrayList<Record>();
-		ArrayList<ArrayList<Record>> recordsGroupedByMinute = new ArrayList<ArrayList<Record>>();
+		LinkedList<ArrayList<Record>> recordsGroupedByMinute = new LinkedList<ArrayList<Record>>();
 
 		BufferedReader br = null;
 		String line = "";
@@ -63,9 +64,9 @@ public class PrepData {
 						if (recordsGroupedByMinute.size() == 2) {
 							prepData.writeToFile(prepData.setDirectionality(recordsGroupedByMinute),
 									fileName.getAbsolutePath().toString().replace(".csv", "-prepared.csv"));
-							recordsGroupedByMinute.remove(0);
+							recordsGroupedByMinute.removeFirst();
 						}
-						records.clear();
+						records = new ArrayList<Record>();
 						records.add(tempRecord);
 					}
 				}
@@ -197,12 +198,14 @@ public class PrepData {
 		return records;
 	}
 
-	ArrayList<Record> setDirectionality(ArrayList<ArrayList<Record>> recordsGroupedByMinute) {
-		ArrayList<Record> firstMinuteRecords = recordsGroupedByMinute.get(0);
-		ArrayList<Record> secondMinuteRecords = recordsGroupedByMinute.get(1);
-		int directionality = 0;
-		if (firstMinuteRecords.get(0).getAskPrice() < secondMinuteRecords.get(0).getAskPrice()) {
+	ArrayList<Record> setDirectionality(LinkedList<ArrayList<Record>> recordsGroupedByMinute) {
+		ArrayList<Record> firstMinuteRecords = recordsGroupedByMinute.getFirst();
+		ArrayList<Record> secondMinuteRecords = recordsGroupedByMinute.getLast();
+		int directionality = -1;
+		if (firstMinuteRecords.get(0).getAvgAskPrice() < secondMinuteRecords.get(0).getAvgAskPrice()) {
 			directionality = 1;
+		}else{
+			directionality = 0;
 		}
 		for (Record record : firstMinuteRecords) {
 			record.setAskDirectionality(String.valueOf(directionality));

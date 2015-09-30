@@ -362,7 +362,7 @@ public class DecisionTree {
 		// Getting all the prepared data files
 		DecisionTree decisionTree = new DecisionTree();
 		ArrayList<Record> records = new ArrayList<Record>();
-		String baseFolder = "/Users/vinayshankar/CMU/2015Fall/11-676-BigData/Project/Data";
+		String baseFolder = "C:/Users/Vinay Shankar/Documents/Vinay/CMU/2015Fall/11-676-BigData/Project/Data";
 		decisionTree.getAllFiles(baseFolder);
 		BufferedReader br = null;
 		String line = "";
@@ -395,7 +395,7 @@ public class DecisionTree {
 			ForexTree learnedTree = new DecisionTree.ForexTree(records);
 			
 			// Testing the decision tree
-			baseFolder = "/Users/vinayshankar/CMU/2015Fall/11-676-BigData/Project/TestData";
+			baseFolder = "C:/Users/Vinay Shankar/Documents/Vinay/CMU/2015Fall/11-676-BigData/Project/TestData";
 			decisionTree.getAllFiles(baseFolder);
 			br = null;
 			line = "";

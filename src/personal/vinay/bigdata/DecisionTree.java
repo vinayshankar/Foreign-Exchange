@@ -349,7 +349,7 @@ public class DecisionTree {
 			if (file.isFile()) {
 				String[] tokens = file.toString().split("\\.(?=[^\\.]+$)");
 				if (tokens[1].equalsIgnoreCase("csv")) {
-					if (tokens[0].toLowerCase().contains("prepared") && tokens[0].toLowerCase().contains("EURUSD"))
+					if (tokens[0].toLowerCase().contains("prepared") && tokens[0].toLowerCase().contains("eurusd"))
 						fileNames.add(file);
 				}
 			} else if (file.isDirectory()) {
@@ -368,6 +368,7 @@ public class DecisionTree {
 		String line = "";
 		for (File file : fileNames) {
 			try {
+				System.out.println("Filename: "+file.getName());
 				br = new BufferedReader(new FileReader(file));
 				while ((line = br.readLine()) != null) {
 					String[] data = line.split(COMMA);

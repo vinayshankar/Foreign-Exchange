@@ -22,7 +22,7 @@ public class PrepData {
 
 	public static void main(String[] args) {
 		PrepData prepData = new PrepData();
-		String baseFolder = "C:/Users/Vinay Shankar/Documents/Vinay/CMU/2015Fall/11-676-BigData/Project/DevData";
+		String baseFolder = "C:/Users/Vinay Shankar/Documents/Vinay/CMU/2015Fall/11-676-BigData/Project/TestData";
 		prepData.getAllFiles(baseFolder);
 		for (File file : fileNames) {
 			prepData.processData(file);
@@ -89,8 +89,8 @@ public class PrepData {
 	}
 
 	ArrayList<Record> setMinPrice(ArrayList<Record> records) {
-		float minAskPrice = 9999;
-		float minBidPrice = 9999;
+		double minAskPrice = 9999;
+		double minBidPrice = 9999;
 		for (Record record : records) {
 			if (record.getAskPrice() < minAskPrice) {
 				minAskPrice = record.getAskPrice();
@@ -110,8 +110,8 @@ public class PrepData {
 	}
 
 	ArrayList<Record> setMaxPrice(ArrayList<Record> records) {
-		float maxAskPrice = 0;
-		float maxBidPrice = 0;
+		double maxAskPrice = 0;
+		double maxBidPrice = 0;
 		for (Record record : records) {
 			if (record.getAskPrice() > maxAskPrice) {
 				maxAskPrice = record.getAskPrice();
@@ -131,10 +131,10 @@ public class PrepData {
 	}
 
 	ArrayList<Record> setAvgPrice(ArrayList<Record> records) {
-		float avgAskPrice = 0;
-		float sumAskPrice = 0;
-		float avgBidPrice = 0;
-		float sumBidPrice = 0;
+		double avgAskPrice = 0;
+		double sumAskPrice = 0;
+		double avgBidPrice = 0;
+		double sumBidPrice = 0;
 		for (Record record : records) {
 			sumAskPrice += record.getAskPrice();
 			sumBidPrice += record.getBidPrice();
@@ -153,7 +153,7 @@ public class PrepData {
 	}
 
 	ArrayList<Record> setMinSpread(ArrayList<Record> records) {
-		float minSpread = 9999;
+		double minSpread = 9999;
 		for (Record record : records) {
 			if ((record.getBidPrice() - record.getAskPrice()) < minSpread) {
 				minSpread = record.getBidPrice() - record.getAskPrice();
@@ -168,7 +168,7 @@ public class PrepData {
 	}
 
 	ArrayList<Record> setMaxSpread(ArrayList<Record> records) {
-		float maxSpread = 0;
+		double maxSpread = 0;
 		for (Record record : records) {
 			if ((record.getBidPrice() - record.getAskPrice()) > maxSpread) {
 				maxSpread = record.getBidPrice() - record.getAskPrice();
@@ -183,8 +183,8 @@ public class PrepData {
 	}
 
 	ArrayList<Record> setAvgSpread(ArrayList<Record> records) {
-		float avgSpread = 0;
-		float sumSpread = 0;
+		double avgSpread = 0;
+		double sumSpread = 0;
 		for (Record record : records) {
 			sumSpread += (record.getBidPrice() - record.getAskPrice());
 		}
@@ -247,20 +247,20 @@ public class PrepData {
 	class Record {
 		String symbol;
 		Date tickTime;
-		float askPrice;
-		float bidPrice;
+		double askPrice;
+		double bidPrice;
 
 		// new features
-		float avgAskPrice;
-		float maxAskPrice;
-		float minAskPrice;
-		float avgBidPrice;
-		float maxBidPrice;
-		float minBidPrice;
-		float avgSpread;
-		float maxSpread;
-		float minSpread;
-		// float eurJpyAvg; // Has not been implemented
+		double avgAskPrice;
+		double maxAskPrice;
+		double minAskPrice;
+		double avgBidPrice;
+		double maxBidPrice;
+		double minBidPrice;
+		double avgSpread = 0;
+		double maxSpread = 0;
+		double minSpread = 0;
+		// double eurJpyAvg; // Has not been implemented
 
 		// label
 		String askDirectionality;
@@ -270,8 +270,8 @@ public class PrepData {
 		public Record(String[] record) throws ParseException {
 			this.symbol = record[0];
 			this.tickTime = df.parse(record[1]);
-			this.askPrice = Float.parseFloat(record[2]);
-			this.bidPrice = Float.parseFloat(record[3]);
+			this.askPrice = Double.parseDouble(record[2]);
+			this.bidPrice = Double.parseDouble(record[3]);
 		}
 
 		public Record() {
@@ -293,43 +293,43 @@ public class PrepData {
 			this.tickTime = tickTime;
 		}
 
-		public float getAskPrice() {
+		public double getAskPrice() {
 			return askPrice;
 		}
 
-		public void setAskPrice(float askPrice) {
+		public void setAskPrice(double askPrice) {
 			this.askPrice = askPrice;
 		}
 
-		public float getBidPrice() {
+		public double getBidPrice() {
 			return bidPrice;
 		}
 
-		public void setBidPrice(float bidPrice) {
+		public void setBidPrice(double bidPrice) {
 			this.bidPrice = bidPrice;
 		}
 
-		public float getAvgSpread() {
+		public double getAvgSpread() {
 			return avgSpread;
 		}
 
-		public void setAvgSpread(float avgSpread) {
+		public void setAvgSpread(double avgSpread) {
 			this.avgSpread = avgSpread;
 		}
 
-		public float getMaxSpread() {
+		public double getMaxSpread() {
 			return maxSpread;
 		}
 
-		public void setMaxSpread(float maxSpread) {
+		public void setMaxSpread(double maxSpread) {
 			this.maxSpread = maxSpread;
 		}
 
-		public float getMinSpread() {
+		public double getMinSpread() {
 			return minSpread;
 		}
 
-		public void setMinSpread(float minSpread) {
+		public void setMinSpread(double minSpread) {
 			this.minSpread = minSpread;
 		}
 
@@ -341,51 +341,51 @@ public class PrepData {
 			this.askDirectionality = askDirectionality;
 		}
 
-		public float getAvgAskPrice() {
+		public double getAvgAskPrice() {
 			return avgAskPrice;
 		}
 
-		public void setAvgAskPrice(float avgAskPrice) {
+		public void setAvgAskPrice(double avgAskPrice) {
 			this.avgAskPrice = avgAskPrice;
 		}
 
-		public float getMaxAskPrice() {
+		public double getMaxAskPrice() {
 			return maxAskPrice;
 		}
 
-		public void setMaxAskPrice(float maxAskPrice) {
+		public void setMaxAskPrice(double maxAskPrice) {
 			this.maxAskPrice = maxAskPrice;
 		}
 
-		public float getMinAskPrice() {
+		public double getMinAskPrice() {
 			return minAskPrice;
 		}
 
-		public void setMinAskPrice(float minAskPrice) {
+		public void setMinAskPrice(double minAskPrice) {
 			this.minAskPrice = minAskPrice;
 		}
 
-		public float getAvgBidPrice() {
+		public double getAvgBidPrice() {
 			return avgBidPrice;
 		}
 
-		public void setAvgBidPrice(float avgBidPrice) {
+		public void setAvgBidPrice(double avgBidPrice) {
 			this.avgBidPrice = avgBidPrice;
 		}
 
-		public float getMaxBidPrice() {
+		public double getMaxBidPrice() {
 			return maxBidPrice;
 		}
 
-		public void setMaxBidPrice(float maxBidPrice) {
+		public void setMaxBidPrice(double maxBidPrice) {
 			this.maxBidPrice = maxBidPrice;
 		}
 
-		public float getMinBidPrice() {
+		public double getMinBidPrice() {
 			return minBidPrice;
 		}
 
-		public void setMinBidPrice(float minBidPrice) {
+		public void setMinBidPrice(double minBidPrice) {
 			this.minBidPrice = minBidPrice;
 		}
 
@@ -405,12 +405,9 @@ public class PrepData {
 				strBuilder.append(COMMA).append(this.maxBidPrice);
 			if (this.minBidPrice != 0)
 				strBuilder.append(COMMA).append(this.minBidPrice);
-			if (this.avgSpread != 0)
-				strBuilder.append(COMMA).append(this.avgSpread);
-			if (this.maxSpread != 0)
-				strBuilder.append(COMMA).append(this.maxSpread);
-			if (this.minSpread != 0)
-				strBuilder.append(COMMA).append(this.minSpread);
+			strBuilder.append(COMMA).append(this.avgSpread);
+			strBuilder.append(COMMA).append(this.maxSpread);
+			strBuilder.append(COMMA).append(this.minSpread);
 			if (this.askDirectionality != null)
 				strBuilder.append(COMMA).append(this.askDirectionality);
 			return strBuilder.toString();

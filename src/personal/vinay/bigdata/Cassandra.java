@@ -61,7 +61,7 @@ public class Cassandra {
 			HashSet<Integer> maskedFeatures = new HashSet<Integer>();
 			int min = 1;
 			int max = numberOfFeatures;
-			int range = (max - min) + 1;;
+			int range = (max - min) + 1;
 			boolean featuresSelected = false;
 			while(!featuresSelected){
 				int random = (int)(Math.random()*range) + min;

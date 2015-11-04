@@ -22,7 +22,7 @@ public class PrepData {
 
 	public static void main(String[] args) {
 		PrepData prepData = new PrepData();
-		String baseFolder = "C:/Users/Vinay Shankar/Documents/Vinay/CMU/2015Fall/11-676-BigData/Project/TestData";
+		String baseFolder = "C:/Users/Vinay Shankar/Documents/Vinay/CMU/2015Fall/11-676-BigData/Project/Data";
 		prepData.getAllFiles(baseFolder);
 		for (File file : fileNames) {
 			prepData.processData(file);

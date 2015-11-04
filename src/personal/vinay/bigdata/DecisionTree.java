@@ -210,7 +210,7 @@ public class DecisionTree {
 		
 	}
 
-	private static class Record {
+	public static class Record {
 		String symbol;
 		Date tickTime;
 		double askPrice;
@@ -235,7 +235,7 @@ public class DecisionTree {
 		// label
 		String askDirectionality; // directionality of eurUSD
 
-		DateFormat df = new SimpleDateFormat("yyyyMMdd HH:mm:ss.SSS");
+		static final DateFormat df = new SimpleDateFormat("yyyyMMdd HH:mm:ss.SSS");
 
 		public Record(String[] record) throws ParseException {
 			this.symbol = record[0];
@@ -369,9 +369,10 @@ public class DecisionTree {
 		for (File file : fileNames) {
 			try {
 				System.out.println("Filename: "+file.getName());
+				String[] data = null;
 				br = new BufferedReader(new FileReader(file));
 				while ((line = br.readLine()) != null) {
-					String[] data = line.split(COMMA);
+					data = line.split(COMMA);
 					records.add(new DecisionTree.Record(data));
 				}
 			} catch (FileNotFoundException fnfe) {

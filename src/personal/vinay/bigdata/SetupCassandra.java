@@ -14,21 +14,22 @@ public class SetupCassandra {
 	public static void main(String[] args) {
 
 		SetupCassandra setup = new SetupCassandra();
-		String baseFolder = "/mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/Data";
+		String baseFolder = "/mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/TestData";
 		setup.getAllFiles(baseFolder);
 
 		try {
 			String sql;
-			FileWriter foutstream = new FileWriter("/mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/queries.txt");
+			FileWriter foutstream = new FileWriter("/mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/testqueries.txt");
 			BufferedWriter out = new BufferedWriter(foutstream);
 			for (File file : fileNames) {
+				System.out.println("Filename:"+file.getAbsolutePath());
 				sql = "copy records (symbol, datetime, askprice, bidprice, avgaskprice, maxaskprice, minaskprice, avgbidprice, maxbidprice, minbidprice, avgspread, maxspread, minspread, askdirectionality) from '" + file.getAbsolutePath() + "';";
 				out.write(sql + "\n");
 			}
 			out.close();
 			
 			String sysEnvStr = System.getenv("CASSANDRA_HOME");
-			Process p = Runtime.getRuntime().exec(sysEnvStr + "/bin/cqlsh -k trainingdata -f /mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/queries.txt");
+			Process p = Runtime.getRuntime().exec(sysEnvStr + "/bin/cqlsh -k testingdata -f /mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/testqueries.txt");
 			BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 			String s = "";
@@ -54,6 +55,7 @@ public class SetupCassandra {
 				if (tokens[1].equalsIgnoreCase("csv")) {
 					if (tokens[0].toLowerCase().contains("prepared") && tokens[0].toLowerCase().contains("eurusd"))
 						fileNames.add(file);
+					break;
 				}
 			} else if (file.isDirectory()) {
 				getAllFiles(file.getAbsolutePath());

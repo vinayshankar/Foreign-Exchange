@@ -126,7 +126,7 @@ public class Cassandra {
 		
 		ResultSet results = session.execute("SELECT * FROM "+tableName);
 		for (Row row : results) {
-			recordString = new String[9];
+			recordString = new String[14];
 			recordString[0] = row.getString("symbol");
 			recordString[1] = row.getString("datetime");
 			recordString[2] = row.getString("askprice");
@@ -147,7 +147,7 @@ public class Cassandra {
 		return records;
 	}
 
-	public static void main(String args) {
+	public static void main(String[] args) {
 		Cassandra runner = new Cassandra();
 		
 		try {

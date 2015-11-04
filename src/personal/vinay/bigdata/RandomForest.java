@@ -136,7 +136,7 @@ public class RandomForest {
 		}
 	}
 
-	public static void main(String args) {
+	public static void main(String[] args) {
 		RandomForest runner = new RandomForest();
 		ArrayList<Record> records = new ArrayList<Record>();
 		String baseFolder = "C:/Users/Vinay Shankar/Documents/Vinay/CMU/2015Fall/11-676-BigData/Project/Data";

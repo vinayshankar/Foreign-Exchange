@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import personal.vinay.bigdata.DecisionTree.ForexTree;
 import personal.vinay.bigdata.DecisionTree.Record;
@@ -57,9 +58,25 @@ public class RandomForest {
 						recordsOfTree.add(record);
 					}
 				}
-				//Set<Integer> mask = generateFeatureMask(this.records.get(0).NO_OF_FEATURES);
-				randomForest.add(new ForexTree(recordsOfTree));
+				HashSet<Integer> maskedFeatures = getRandomMaskedFeatures(this.records.get(0).NO_OF_FEATURES);
+				randomForest.add(new ForexTree(recordsOfTree, maskedFeatures));
 			}
+		}
+		
+		private HashSet<Integer> getRandomMaskedFeatures(int numberOfFeatures){
+			HashSet<Integer> maskedFeatures = new HashSet<Integer>();
+			int min = 1;
+			int max = numberOfFeatures;
+			int range = (max - min) + 1;;
+			boolean featuresSelected = false;
+			while(!featuresSelected){
+				int random = (int)(Math.random()*range) + min;
+				if(!maskedFeatures.contains(random))
+					maskedFeatures.add(random);
+				if(maskedFeatures.size() == 3)
+					break;
+			}
+			return maskedFeatures;
 		}
 
 		private boolean addRecord() {

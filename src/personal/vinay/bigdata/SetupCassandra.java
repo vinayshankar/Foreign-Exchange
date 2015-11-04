@@ -14,7 +14,7 @@ public class SetupCassandra {
 	public static void main(String[] args) {
 
 		SetupCassandra setup = new SetupCassandra();
-		String baseFolder = "/mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/Data";
+		String baseFolder = "/mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/Data/2013";
 		setup.getAllFiles(baseFolder);
 
 		try {
@@ -22,7 +22,7 @@ public class SetupCassandra {
 			FileWriter foutstream = new FileWriter("/mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/queries.txt");
 			BufferedWriter out = new BufferedWriter(foutstream);
 			for (File file : fileNames) {
-				sql = "copy records from '" + file.getAbsolutePath() + "';";
+				sql = "copy records (symbol, datetime, askprice, bidprice, avgaskprice, maxaskprice, minaskprice, avgbidprice, maxbidprice, minbidprice, avgspread, maxspread, minspread, askdirectionality) from '" + file.getAbsolutePath() + "';";
 				out.write(sql + "\n");
 			}
 			out.close();

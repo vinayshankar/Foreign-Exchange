@@ -38,8 +38,11 @@ public class DecisionTree {
 		private HashMap<Integer,Double> continuousFeatureEntropyValues = new HashMap<Integer,Double>();
 		
 		public static HashSet<Integer> FEATURES_USED = new HashSet<Integer>();
+		
+		private HashSet<Integer> featuresMasked;
 
-		public ForexTree(ArrayList<Record> records) throws Exception {
+		public ForexTree(ArrayList<Record> records, HashSet<Integer> featuresMasked) throws Exception {
+			this.featuresMasked = featuresMasked;
 			calculateContinuousFeaturesThresholdEntropyValues(records);
 			this.nodeId = initAndGetBestFeatureId(records);
 			FEATURES_USED.add(this.nodeId);
@@ -56,15 +59,15 @@ public class DecisionTree {
 					}
 				}
 			
-				this.leftNode = new ForexTree(leftNodeRecords);
-				this.rightNode = new ForexTree(rightNodeRecords);
+				this.leftNode = new ForexTree(leftNodeRecords, new HashSet<Integer>());
+				this.rightNode = new ForexTree(rightNodeRecords, new HashSet<Integer>());
 			}
 		}
 		
 		private void calculateContinuousFeaturesThresholdEntropyValues(ArrayList<Record> records) throws Exception{
 			double thresholdValue = -1;
 			double entropy = -1;
-			for (int i = 1; i <= Record.NO_OF_FEATURES && !FEATURES_USED.contains(i) && !Record.isFeatureDiscrete(i); i++) {
+			for (int i = 1; i <= Record.NO_OF_FEATURES && !FEATURES_USED.contains(i) && this.featuresMasked.contains(i) && !Record.isFeatureDiscrete(i); i++) {
 				// logic to calculate variance for the feature i
 				ArrayList<Double> values = new ArrayList<Double>();
 				// Add all the values of this feature that exist in the records into the list
@@ -394,7 +397,7 @@ public class DecisionTree {
 		
 		try {
 			// Creating and training the decision tree
-			ForexTree learnedTree = new DecisionTree.ForexTree(records);
+			ForexTree learnedTree = new DecisionTree.ForexTree(records, new HashSet<Integer>());
 			
 			// Testing the decision tree
 			baseFolder = "C:/Users/Vinay Shankar/Documents/Vinay/CMU/2015Fall/11-676-BigData/Project/TestData";

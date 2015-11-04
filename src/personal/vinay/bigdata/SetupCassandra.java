@@ -14,7 +14,7 @@ public class SetupCassandra {
 	public static void main(String[] args) {
 
 		SetupCassandra setup = new SetupCassandra();
-		String baseFolder = "/mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/Data/2013";
+		String baseFolder = "/mnt/hgfs/vinay-windows/CMU/2015Fall/11-676-BigData/Project/Data";
 		setup.getAllFiles(baseFolder);
 
 		try {

@@ -5,6 +5,7 @@ Homework 1 - PrepData.java
   Note: Mixing of the currency pairs data to ensure correct prediction in the future
 
 Homework 2 - DecisionTree.java
+
   All the prepared files are retrieved. 
   Each record in each file is retrieved into a list.
   The list with all the records is then fed to the constructor of the Decision tree.
@@ -16,6 +17,7 @@ Homework 2 - DecisionTree.java
   The stats corresponding to true positives, true negatives, false positives and false negatives are captured.
 
 Homework 3 - RandomForest.java
+
   All the prepared files are retrieved. 
   Each record in each file is retrieved into a list.
   The list with all the records is then fed to the constructor of the Random Forest along with number of trees that needs to   be in the forest.
@@ -25,6 +27,7 @@ Homework 3 - RandomForest.java
   The random forest in then queried against every test record and the stats corresponding to true positives, true negatives,   false positives and false negatives are captured.
   
 Homework 4 - Cassandra.java
+
   The prepared training data is stored in a cassandra table 'records' in the keyspace 'trainingdata'.
   The prepared testing data is stored in a cassandra table 'records' in the kepspace 'testingdata'.
   The training data is read from the cassandra table and fed to the constructor of the random forest.

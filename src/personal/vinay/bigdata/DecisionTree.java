@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import com.google.gson.Gson;
+
 public class DecisionTree {
 
 	public static final String COMMA = ",";
@@ -63,6 +65,10 @@ public class DecisionTree {
 				this.rightNode = new ForexTree(rightNodeRecords, new HashSet<Integer>());
 			}
 		}
+		
+		static ForexTree fromJsonString(String json) {
+	        return new Gson().fromJson(json, ForexTree.class);
+	    }
 		
 		private void calculateContinuousFeaturesThresholdEntropyValues(ArrayList<Record> records) throws Exception{
 			double thresholdValue = -1;
@@ -170,6 +176,11 @@ public class DecisionTree {
 					+ ((noEntropyData.getNo() + noEntropyData.getYes()) / this.leftNodeSize + this.rightNodeSize)
 							* noEntropyData.getEntropy();
 		}
+		
+		public String toJsonString(){
+	        Gson gson = new Gson();
+	        return gson.toJson(this);
+	    }
 
 		private class EntropyData {
 			private int yes = 0;

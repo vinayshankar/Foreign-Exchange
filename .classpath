@@ -8,5 +8,10 @@
 	<classpathentry kind="lib" path="lib/guava-16.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/netty-3.9.0.Final.jar"/>
 	<classpathentry kind="lib" path="lib/metrics-core-3.0.2.jar"/>
+	<classpathentry kind="lib" path="/home/vinays/Development/hadoop-2.7.1/share/hadoop/common/hadoop-common-2.7.1.jar"/>
+	<classpathentry kind="lib" path="/home/vinays/Development/hadoop-2.7.1/share/hadoop/mapreduce/hadoop-mapreduce-client-core-2.7.1.jar"/>
+	<classpathentry kind="lib" path="/home/vinays/Development/hadoop-2.7.1/share/hadoop/mapreduce/hadoop-mapreduce-client-jobclient-2.7.1.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.4.jar"/>
+	<classpathentry kind="lib" path="/home/vinays/Development/apache-cassandra-2.1.11/lib/apache-cassandra-2.1.11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

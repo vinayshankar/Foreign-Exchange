@@ -32,3 +32,8 @@ Homework 4 - Cassandra.java
   The prepared testing data is stored in a cassandra table 'records' in the kepspace 'testingdata'.
   The training data is read from the cassandra table and fed to the constructor of the random forest.
   The testing data is again read from the cassandra table and tested against the random forest. 
+  
+  Homework 5 - MapReduce.java
+
+  Each mapper queries cassandra and gets data. Then it chooses random records and random features and creates a tree. It then converts the tree to json string and outputs the string
+  Each reducer receives the converts the trees back to java objects, adds the trees to the random forest, converts the random forest to json string and outputs the random forest and also writes the random forest back to cassandra 

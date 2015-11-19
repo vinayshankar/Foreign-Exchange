@@ -14,6 +14,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import com.google.gson.Gson;
+
 import personal.vinay.bigdata.DecisionTree.ForexTree;
 import personal.vinay.bigdata.DecisionTree.Record;
 
@@ -48,6 +50,12 @@ public class RandomForest {
 			}
 			createForest();
 		}
+		
+		public ForexForest(ArrayList<ForexTree> trees ){
+			this.numberOfTrees = trees.size();
+			this.records = null;
+			this.randomForest = trees;
+		}
 
 		private void createForest() throws Exception {
 			for (int i = 0; i < this.numberOfTrees; i++) {
@@ -58,7 +66,7 @@ public class RandomForest {
 						recordsOfTree.add(record);
 					}
 				}
-				HashSet<Integer> maskedFeatures = getRandomMaskedFeatures(this.records.get(0).NO_OF_FEATURES);
+				HashSet<Integer> maskedFeatures = getRandomMaskedFeatures(Record.NO_OF_FEATURES);
 				randomForest.add(new ForexTree(recordsOfTree, maskedFeatures));
 			}
 		}
@@ -117,6 +125,11 @@ public class RandomForest {
 	        this.records = temp.records;
 	        this.randomForest = temp.randomForest;
 		}
+		
+	    public String toJsonString(){
+	        Gson gson  = new Gson();
+	        return gson.toJson(this);
+	    }
 	}
 
 	private void getAllFiles(String inputPath) {

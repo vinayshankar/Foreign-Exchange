@@ -14,6 +14,7 @@ import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import com.google.gson.Gson;
 
 import personal.vinay.bigdata.DecisionTree.ForexTree;
 import personal.vinay.bigdata.DecisionTree.Record;
@@ -42,6 +43,12 @@ public class Cassandra {
 			}
 			createForest();
 		}
+		
+		public ForexForest(ArrayList<ForexTree> trees ){
+			this.numberOfTrees = trees.size();
+			this.records = null;
+			this.randomForest = trees;
+		}
 
 		private void createForest() throws Exception {
 			for (int i = 0; i < this.numberOfTrees; i++) {
@@ -52,12 +59,12 @@ public class Cassandra {
 						recordsOfTree.add(record);
 					}
 				}
-				HashSet<Integer> maskedFeatures = getRandomMaskedFeatures(this.records.get(0).NO_OF_FEATURES);
+				HashSet<Integer> maskedFeatures = getRandomMaskedFeatures(Record.NO_OF_FEATURES);
 				randomForest.add(new ForexTree(recordsOfTree, maskedFeatures));
 			}
 		}
 		
-		private HashSet<Integer> getRandomMaskedFeatures(int numberOfFeatures){
+		static HashSet<Integer> getRandomMaskedFeatures(int numberOfFeatures){
 			HashSet<Integer> maskedFeatures = new HashSet<Integer>();
 			int min = 1;
 			int max = numberOfFeatures;
@@ -73,7 +80,7 @@ public class Cassandra {
 			return maskedFeatures;
 		}
 
-		private boolean addRecord() {
+		static boolean addRecord() {
 			return Math.random() < RECORDS_RATIO;
 		}
 
@@ -111,9 +118,14 @@ public class Cassandra {
 	        this.records = temp.records;
 	        this.randomForest = temp.randomForest;
 		}
+		
+		public String toJsonString(){
+	        Gson gson  = new Gson();
+	        return gson.toJson(this);
+	    }
 	}
 	
-	private ArrayList<Record> getRecordsFromCassandra(String keyspace, String tableName) throws ParseException{
+	static ArrayList<Record> getRecordsFromCassandra(String keyspace, String tableName) throws ParseException{
 		Cluster cluster;
 		Session session;
 		
@@ -144,8 +156,24 @@ public class Cassandra {
 			record = new Record(recordString);
 			records.add(record);
 		}
+		
+		cluster.close();
+		
 		return records;
 	}
+	
+	static void writeForestToCassandra(String keyspace, String tableName, String serializedForest) {
+        Cluster cluster;
+        Session session;
+
+        cluster = Cluster.builder().addContactPoint("127.0.0.1").build();
+
+        session = cluster.connect(keyspace);
+        String query = "INSERT INTO" +tableName+ " VALUES ('" + serializedForest + "');";
+        session.execute(query);
+        
+        cluster.close();
+    }
 
 	public static void main(String[] args) {
 		Cassandra runner = new Cassandra();
@@ -186,6 +214,7 @@ public class Cassandra {
 			System.out.println("Incorrectly predicted ask price decrease: " + incorrectNo);
 
 			forexForest.writeObject("C:/Users/Vinay Shankar/Documents/Vinay/CMU/2015Fall/11-676-BigData/Project/forexforest.ser");
+			writeForestToCassandra("trainingdata", "randomforest", forexForest.toJsonString());
 		}  catch (ParseException pe) {
 			pe.printStackTrace();
 		} catch (Exception e) {

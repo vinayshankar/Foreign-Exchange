@@ -1,0 +1,9 @@
+sbt package
+yes
+1
+exit
+run
+exit
+run
+exit
+run

@@ -28,7 +28,7 @@ object RandomForestScala {
         "avgspread", "maxspread", "minspread")
     val feature_index = Array[Int](0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     
-    //convert the data to rdd format
+    //Create the RDD from cassandra data
     val trainData: RDD[LabeledPoint] = trainingDataTable.map { row =>
       {
         val v: Array[Double] = new Array[Double](11)
@@ -52,7 +52,7 @@ object RandomForestScala {
     val model = RandomForest.trainClassifier(trainData, numClasses, categoricalFeaturesInfo,
       numberOfTrees, featureSubsetStrategy, impurity, maxDepth, maxBins)
 
-    //get and convert data in test set
+    //Create rdd from the test data in cassandra
     val testDataTable = sc.cassandraTable("testingrecords", "records")
     val testData: RDD[LabeledPoint] = testDataTable.map { row =>
       {

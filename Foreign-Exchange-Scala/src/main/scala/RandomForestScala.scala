@@ -76,7 +76,7 @@ object RandomForestScala {
     println("Test Precision = " + (1 - testErrors))
 
     println("Test Recall = " + testRecall)
-    println("Learned classification forest model:\n" + model.toDebugString)
+    println("Random Forest:\n" + model.toDebugString)
 
     //save results into cassandra
     val collection = sc.parallelize(Seq((Calendar.getInstance().getTime(), (1 - testErrors), testRecall)))

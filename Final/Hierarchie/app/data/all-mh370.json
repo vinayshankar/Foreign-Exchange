@@ -1,0 +1,37 @@
+{
+	"name": "graph",
+	"children": [{
+		"name": "minors",
+		"children": [],
+		"words": []
+	}, {
+		"name": "trees",
+		"children": [],
+		"words": []
+	}, {
+		"name": "survey",
+		"children": [{
+			"name": "computer",
+			"children": [],
+			"words": ["human", "interface"]
+		}, {
+			"name": "time",
+			"children": [],
+			"words": []
+		}, {
+			"name": "response",
+			"children": [],
+			"words": []
+		}, {
+			"name": "system",
+			"children": [],
+			"words": ["eps"]
+		}, {
+			"name": "user",
+			"children": [],
+			"words": []
+		}],
+		"words": ["computer", "time", "response", "system", "user"]
+	}],
+	"words": ["minors", "trees", "survey"]
+}

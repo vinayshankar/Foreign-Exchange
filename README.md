@@ -46,3 +46,6 @@ Homework 6 - Foreign-Exchange/src/main/scala/RandomForest.scala
   The random forest is then tested using an rdd created of the test data. 
   The results of testing are extracted and printed on the console. 
   Note: I am using the "sbt" tool to package and run the code in spark. 
+  
+Final - Final
+  This folder contains the files for the final project submission. Please read the readme file included inside the folder.
